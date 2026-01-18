@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>مدرستي الصحية الذكية</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="row">
+      <div class="brand">
+        <div class="logo">🍏</div>
+        <div>
+          <h1>مدرستي الصحية الذكية</h1>
+          <div class="sub">تحديات + نقاط + محطات QR + ترتيب على مستوى المدرسة</div>
+        </div>
+      </div>
+      <div class="pill" id="whoPill">👤 <span id="whoText">غير مسجل</span></div>
+      <button class="btn" id="btnLogout">تسجيل خروج</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="grid">
+    <section class="card" id="mainCard">
+      <h2>🎮 لوحة الطالب</h2>
+      <div class="muted" id="welcomeText">سجّل دخولك للبدء بتجميع نقاط الصحة وفتح البادجات!</div>
+
+      <div class="hr"></div>
+
+      <div class="tabs">
+        <button class="tab active" data-view="login">تسجيل الدخول</button>
+        <button class="tab" data-view="submit">إضافة وجبة/مشتريات</button>
+        <button class="tab" data-view="station">محطة QR (كود + سؤال)</button>
+        <button class="tab" data-view="badges">البادجات</button>
+        <button class="tab" data-view="history">سجل المشاركات</button>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="view-login" class="view">
+        <div class="notice">
+          ✅ دخول بسيط بالاسم والصف.<br/>
+          🧑‍🏫 للمعلم: افتح تبويب <span class="kbd">لوحة المعلم</span> من اليمين.
+        </div>
+
+        <div class="two">
+          <div>
+            <label>اسم الطالب</label>
+            <input id="studentName" placeholder="مثال: محمد أبو..." />
+          </div>
+          <div>
+            <label>الصف</label>
+            <select id="studentClass">
+              <option value="">اختر الصف…</option>
+              <option>الأول</option><option>الثاني</option><option>الثالث</option>
+              <option>الرابع</option><option>الخامس</option><option>السادس</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="two">
+          <div>
+            <label>الشعبة (اختياري)</label>
+            <input id="studentSection" placeholder="مثال: أ / ب" />
+          </div>
+          <div>
+            <label>رمز المدرسة (اختياري)</label>
+            <input id="schoolCode" placeholder="مثال: ALFIRD-01" />
+          </div>
+        </div>
+
+        <div class="flex" style="margin-top:12px">
+          <button class="btn primary" id="btnLogin">دخول</button>
+          <span class="small">يتم حفظ البيانات على جهازك (LocalStorage).</span>
+        </div>
+      </div>
+
+      <!-- SUBMIT -->
+      <div id="view-submit" class="view hide">
+        <div class="statRow">
+          <div class="stat">
+            <div class="k">نقاطي</div>
+            <div class="v" id="myPoints">0</div>
+          </div>
+          <div class="stat">
+            <div class="k">مشاركاتي</div>
+            <div class="v" id="myPosts">0</div>
+          </div>
+          <div class="stat">
+            <div class="k">مستواي</div>
+            <div class="v" id="myLevel">1</div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <label>ارفع صورة الوجبة/المشتريات الصحية</label>
+        <input type="file" id="foodImage" accept="image/*" />
+
+        <div class="two">
+          <div>
+            <label>نوع الاختيار الصحي</label>
+            <select id="foodType">
+              <option value="">اختر…</option>
+              <option value="fruit">فاكهة</option>
+              <option value="veg">خضار</option>
+              <option value="water">ماء</option>
+              <option value="nuts">مكسرات (بدون إضافات)</option>
+              <option value="sandwich">ساندويش صحي</option>
+              <option value="dairy">لبن/زبادي</option>
+              <option value="other">آخر (صحي)</option>
+            </select>
+          </div>
+          <div>
+            <label>هل اشتريته من المقصف؟</label>
+            <select id="fromCafeteria">
+              <option value="no">لا</option>
+              <option value="yes">نعم</option>
+            </select>
+          </div>
+        </div>
+
+        <label>وصف قصير (اختياري)</label>
+        <textarea id="foodNote" placeholder="مثال: تفاحة + ماء، بدون شيبس"></textarea>
+
+        <div class="flex" style="margin-top:12px">
+          <button class="btn primary" id="btnSubmit">إرسال + احتساب النقاط</button>
+          <span class="small">نقاط تلقائية حسب النوع + مكافآت إضافية للتنوع.</span>
+        </div>
+      </div>
+
+      <!-- STATION -->
+      <div id="view-station" class="view hide">
+        <div class="notice">
+          🔳 <b>محطات QR داخل المدرسة</b>: اكتب الكود الموجود على الملصق لتحصل على سؤال ونقاط.
+        </div>
+
+        <label>أدخل كود المحطة</label>
+        <input id="stationCodeInput" placeholder="مثال: ST-APPLE" />
+
+        <div class="flex" style="margin-top:12px">
+          <button class="btn primary" id="btnLoadStation">ابدأ السؤال</button>
+          <span class="small" id="stationHint"></span>
+        </div>
+
+        <div class="hr"></div>
+
+        <div id="stationBox" class="hide">
+          <h3 style="margin:0 0 8px;">❓ السؤال</h3>
+          <div class="muted" id="stationQuestion"></div>
+
+          <label>إجابتك</label>
+          <input id="stationAnswer" placeholder="اكتب الإجابة..." />
+
+          <div class="flex" style="margin-top:12px">
+            <button class="btn ok" id="btnCheckStation">تحقق + احصل على نقاط</button>
+            <span class="small" id="stationResult"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- BADGES -->
+      <div id="view-badges" class="view hide">
+        <div class="notice">🏅 البادجات تُفتح تلقائيًا حسب النقاط والتنوع وعدد المشاركات.</div>
+        <div class="hr"></div>
+        <div id="badgeList"></div>
+      </div>
+
+      <!-- HISTORY -->
+      <div id="view-history" class="view hide">
+        <div class="notice">🧾 هذا سجل مشاركاتك على هذا الجهاز.</div>
+        <div class="hr"></div>
+        <div class="list" id="myHistory"></div>
+      </div>
+    </section>
+
+    <aside class="rightCol">
+      <section class="card">
+        <h2>🏆 الترتيب المدرسي</h2>
+        <div class="muted">أفضل 10 طلاب حسب النقاط</div>
+        <div class="hr"></div>
+        <div class="list" id="leaderboard"></div>
+        <div class="hr"></div>
+        <div class="muted">ترتيب الصفوف</div>
+        <div class="chips" id="classBoard"></div>
+      </section>
+
+      <section class="card">
+        <h2>🧑‍🏫 لوحة المعلم</h2>
+        <div class="muted">محطات + أسئلة + تصدير/استيراد</div>
+
+        <div class="hr"></div>
+
+        <div class="two">
+          <div>
+            <label>كلمة مرور المعلم (افتراضيًا: 1234)</label>
+            <input id="teacherPass" type="password" placeholder="اكتب كلمة المرور" />
+          </div>
+          <div style="display:flex; align-items:end;">
+            <button class="btn" id="btnTeacherUnlock" style="width:100%;">فتح</button>
+          </div>
+        </div>
+
+        <div id="teacherPanel" class="hide">
+          <div class="notice">✅ أنت في وضع المعلم.</div>
+
+          <div class="hr"></div>
+
+          <h3 style="margin:0 0 8px;">🔳 إنشاء محطة جديدة</h3>
+          <div class="two">
+            <div>
+              <label>كود المحطة</label>
+              <input id="tCode" placeholder="مثال: ST-APPLE" />
+            </div>
+            <div>
+              <label>النقاط للمحطة</label>
+              <input id="tPoints" type="number" min="1" value="5" />
+            </div>
+          </div>
+          <label>السؤال</label>
+          <input id="tQ" placeholder="مثال: ما فائدة التفاح للجسم؟" />
+          <label>الإجابة الصحيحة</label>
+          <input id="tA" placeholder="مثال: المناعة" />
+
+          <div class="flex" style="margin-top:12px">
+            <button class="btn primary" id="btnAddStation">إضافة المحطة</button>
+            <button class="btn danger" id="btnResetAll">مسح كل بيانات الجهاز</button>
+          </div>
+
+          <div class="hr"></div>
+          <h3 style="margin:0 0 8px;">📌 المحطات الحالية</h3>
+          <div class="list" id="stationList"></div>
+
+          <div class="hr"></div>
+          <h3 style="margin:0 0 8px;">💾 تصدير / استيراد</h3>
+          <div class="flex">
+            <button class="btn" id="btnExport">تصدير JSON</button>
+            <label class="btn" style="cursor:pointer;">
+              استيراد JSON
+              <input type="file" id="importFile" accept="application/json" style="display:none;">
+            </label>
+          </div>
+        </div>
+      </section>
+    </aside>
+  </div>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
+
